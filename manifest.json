@@ -3,23 +3,17 @@
   "dir": "auto",
   "display": "standalone",
   "name": "Lightneee",
-  "orientation": "any",
-  "scope": "/",
   "short_name": "Lightneee",
-  "start_url": "/",
+  "description": "My awesome PWA app",
+  "orientation": "any",
+  "scope": "./",
+  "start_url": "./",
   "theme_color": "#ffffff",
-  "id": "/",
-  "display_override": [
-    "window-controls-overlay",
-    "standalone"
-  ],
-  "categories": [
-    "social"
-  ],
+  "id": "lightneee-app",
   "icons": [
     {
-      "src": "launchericon-512x512.png",
-      "sizes": "512x512"
+      "src": "./launchericon-512x512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
