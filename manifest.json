@@ -1,0 +1,19 @@
+{
+  "background_color": "#ffffff",
+  "dir": "auto",
+  "display": "standalone",
+  "name": "Lightneee",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Lightneee",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "id": "/",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "categories": [
+    "social"
+  ]
+}
