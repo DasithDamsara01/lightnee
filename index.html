@@ -54,7 +54,22 @@
         /* Main Center Panel */
         .center-stage { display: grid; grid-template-columns: 300px 1fr; gap: 15px; height: 100%; overflow: hidden; }
 
-        .chat-theater { background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); height: 100%; }
+        .chat-theater { background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); height: 100%; position: relative; transition: border-color 0.3s, box-shadow 0.3s; }
+        
+        /* Drag & Drop Overlay Animation */
+        .chat-theater.drag-over {
+            border: 2px dashed var(--neon-accent) !important;
+            box-shadow: 0 0 30px var(--neon-glow) !important;
+        }
+        .drag-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 4, 10, 0.85); backdrop-filter: blur(10px);
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 90; pointer-events: none; border-radius: 24px;
+        }
+        .drag-overlay i { font-size: 3.5rem; color: var(--neon-accent); margin-bottom: 15px; animation: pulse 1s infinite; }
+        .drag-overlay p { font-size: 1.1rem; font-weight: bold; letter-spacing: 1px; color: #fff; }
+
         .theater-header { padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); gap: 10px; }
         
         .mobile-back-btn { display: none; background: transparent; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding-right: 10px; }
@@ -94,6 +109,12 @@
         .bubble { padding: 10px 16px; border-radius: 4px 16px 16px 16px; font-size: 0.9rem; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); word-break: break-word; position: relative; }
         .msg-row.outgoing .bubble { border-radius: 16px 4px 16px 16px; background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 255, 255, 0.15); }
         
+        /* Media Bubble Layouts */
+        .chat-media-img { max-width: 250px; max-height: 250px; border-radius: 12px; display: block; margin-bottom: 5px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .chat-media-video { max-width: 280px; max-height: 250px; border-radius: 12px; display: block; margin-bottom: 5px; outline: none; border: 1px solid rgba(255,255,255,0.1); }
+        .chat-media-file { display: flex; align-items: center; gap: 10px; padding: 6px 10px; background: rgba(255,255,255,0.05); border-radius: 8px; color: var(--neon-accent); text-decoration: none; font-size: 0.85rem; font-weight: bold; }
+        .chat-media-file:hover { background: rgba(255,255,255,0.1); }
+
         .msg-timestamp { font-size: 0.65rem; color: rgba(255,255,255,0.3); margin-top: 4px; display: block; letter-spacing: 0.5px; }
         
         .msg-actions-trigger { display: none; gap: 6px; }
@@ -297,6 +318,12 @@
             </aside>
 
             <main class="chat-theater theme-direct" id="chatTheaterFrame">
+                <!-- DRAG & DROP OVERLAY -->
+                <div class="drag-overlay" id="dragOverlay">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <p>DROP FILES HERE TO TRANSMIT</p>
+                </div>
+
                 <header class="theater-header">
                     <div style="display: flex; align-items: center;">
                         <button class="mobile-back-btn" id="mobileBackToListBtn"><i class="fa-solid fa-chevron-left"></i></button>
@@ -322,6 +349,10 @@
 
                 <footer class="input-dock" id="chatInputDock">
                     <div class="dock-wrapper" id="dockWrapper">
+                        <!-- ATTACHMENT FILE INPUT & BUTTON -->
+                        <input type="file" id="chatFileInput" style="display: none;">
+                        <button class="action-btn" id="fileInputTrigger" title="Attach Media or File"><i class="fa-solid fa-paperclip"></i></button>
+                        
                         <input type="text" id="messageInput" class="dock-input" placeholder="Transmit data stream...">
                         <button class="action-btn send-btn" id="sendBtn"><i class="fa-solid fa-arrow-up-long"></i></button>
                     </div>
@@ -380,7 +411,7 @@
                 </div>
             </div>
 
-            <!-- HIDDEN FILE INPUT -->
+            <!-- HIDDEN FILE INPUT FOR PROFILE PHOTO -->
             <input type="file" id="profilePhotoInput" accept="image/*" style="display: none;">
             
             <!-- UPPER FIELD: FULL NAME -->
@@ -517,6 +548,111 @@
       const rightPanelContextTitle = document.getElementById('rightPanelContextTitle');
       const rightPanelDynamicContent = document.getElementById('rightPanelDynamicContent');
       const dockWrapper = document.getElementById('dockWrapper');
+
+      /* File Attachment DOM Elements */
+      const chatFileInput = document.getElementById('chatFileInput');
+      const fileInputTrigger = document.getElementById('fileInputTrigger');
+      const chatTheaterFrame = document.getElementById('chatTheaterFrame');
+      const dragOverlay = document.getElementById('dragOverlay');
+
+      fileInputTrigger.onclick = () => chatFileInput.click();
+
+      // Process uploaded file
+      function processAndSendFile(file) {
+          if(!file) return;
+          if(!selectedTargetID) {
+              alert("Please select a user or group to send files!");
+              return;
+          }
+
+          // Restrict file size to ~3MB to ensure Realtime Database payload compatibility
+          if(file.size > 3 * 1024 * 1024) {
+              alert("File size exceeds 3MB limit! Please upload a smaller file.");
+              return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+              const base64Data = evt.target.result;
+              let fileType = "file";
+
+              if (file.type.startsWith("image/")) {
+                  fileType = "image";
+              } else if (file.type.startsWith("video/")) {
+                  fileType = "video";
+              }
+
+              sendMediaPacket(base64Data, fileType, file.name);
+          };
+          reader.readAsDataURL(file);
+      }
+
+      chatFileInput.onchange = (e) => {
+          const file = e.target.files[0];
+          processAndSendFile(file);
+          chatFileInput.value = "";
+      };
+
+      /* --- DRAG & DROP LOGIC --- */
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          chatTheaterFrame.addEventListener(eventName, preventDefaults, false);
+          document.body.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+      }
+
+      let dragCounter = 0;
+
+      chatTheaterFrame.addEventListener('dragenter', (e) => {
+          dragCounter++;
+          chatTheaterFrame.classList.add('drag-over');
+          dragOverlay.style.display = 'flex';
+      });
+
+      chatTheaterFrame.addEventListener('dragleave', (e) => {
+          dragCounter--;
+          if (dragCounter === 0) {
+              chatTheaterFrame.classList.remove('drag-over');
+              dragOverlay.style.display = 'none';
+          }
+      });
+
+      chatTheaterFrame.addEventListener('drop', (e) => {
+          dragCounter = 0;
+          chatTheaterFrame.classList.remove('drag-over');
+          dragOverlay.style.display = 'none';
+
+          const dt = e.dataTransfer;
+          const files = dt.files;
+
+          if (files && files.length > 0) {
+              for(let i = 0; i < files.length; i++) {
+                  processAndSendFile(files[i]);
+              }
+          }
+      });
+
+      function sendMediaPacket(mediaData, fileType, fileName) {
+          if(!selectedTargetID) return;
+          const path = getActiveDatabaseRefPath();
+
+          const pack = {
+              senderID: currentUserUID,
+              senderName: myName || "User",
+              senderPhoto: myPhotoURL || "",
+              mediaUrl: mediaData,
+              fileType: fileType,
+              fileName: fileName || "Attachment",
+              message: "",
+              type: fileType,
+              timestamp: Date.now()
+          };
+
+          push(ref(db, path), pack);
+      }
 
       function getActiveDatabaseRefPath() {
           if(currentMode === 'direct') {
@@ -1037,14 +1173,28 @@
 
                       const bubble = document.createElement('div');
                       bubble.className = 'bubble';
-                      bubble.innerText = msgData.message;
+
+                      /* MEDIA & FILE RENDER LOGIC */
+                      if (msgData.type === 'image' || msgData.fileType === 'image') {
+                          bubble.innerHTML = `<img src="${msgData.mediaUrl}" class="chat-media-img" onclick="window.open('${msgData.mediaUrl}')" alt="Attachment">`;
+                          if(msgData.message) bubble.innerHTML += `<div>${msgData.message}</div>`;
+                      } else if (msgData.type === 'video' || msgData.fileType === 'video') {
+                          bubble.innerHTML = `<video src="${msgData.mediaUrl}" class="chat-media-video" controls></video>`;
+                          if(msgData.message) bubble.innerHTML += `<div>${msgData.message}</div>`;
+                      } else if (msgData.type === 'file' || msgData.fileType === 'file') {
+                          bubble.innerHTML = `<a href="${msgData.mediaUrl}" download="${msgData.fileName || 'file'}" class="chat-media-file"><i class="fa-solid fa-file-arrow-down"></i> <span>${msgData.fileName || 'Download File'}</span></a>`;
+                          if(msgData.message) bubble.innerHTML += `<div style="margin-top:5px;">${msgData.message}</div>`;
+                      } else {
+                          bubble.innerText = msgData.message;
+                      }
+
                       bubbleWrapper.appendChild(bubble);
 
                       if (isMe) {
                           const actionsDiv = document.createElement('div');
                           actionsDiv.className = 'msg-actions-trigger';
                           actionsDiv.innerHTML = `
-                              <button class="msg-action-inline-btn" onclick="initiateInlineEdit('${key}', \`${msgData.message.replace(/'/g, "\\'")}\`)"><i class="fa-solid fa-pen"></i></button>
+                              ${msgData.message ? `<button class="msg-action-inline-btn" onclick="initiateInlineEdit('${key}', \`${msgData.message.replace(/'/g, "\\'")}\`)"><i class="fa-solid fa-pen"></i></button>` : ''}
                               <button class="msg-action-inline-btn delete" onclick="initiateInlineDelete('${key}')"><i class="fa-solid fa-trash"></i></button>
                           `;
                           bubbleWrapper.appendChild(actionsDiv);
