@@ -48,6 +48,8 @@
         .nav-item.direct-nav.active { color: var(--neon-accent); box-shadow: inset 0 0 10px rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.2); }
         .nav-item.group-nav.active { color: var(--purple-accent); box-shadow: inset 0 0 10px rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.2); }
         .nav-item.settings-nav.active { color: #ff007f; box-shadow: inset 0 0 10px rgba(255,0,127,0.1); border: 1px solid rgba(255,0,127,0.2); }
+        .nav-item.announce-nav.active { color: #eab308; box-shadow: inset 0 0 10px rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.2); }
+        
         .power-btn { width: 45px; height: 45px; border-radius: 12px; display: flex; justify-content: center; align-items: center; color: #ff4d5e; background: rgba(220,53,69,0.05); border: 1px solid rgba(220,53,69,0.1); cursor: pointer; transition: 0.3s; }
         .power-btn:hover { background: #ff4d5e; color: #000; box-shadow: 0 0 15px rgba(220,53,69,0.4); }
 
@@ -109,6 +111,91 @@
         .bubble { padding: 10px 16px; border-radius: 4px 16px 16px 16px; font-size: 0.9rem; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); word-break: break-word; position: relative; }
         .msg-row.outgoing .bubble { border-radius: 16px 4px 16px 16px; background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 255, 255, 0.15); }
         
+        /* Announcement Card Styling */
+        .announcement-card {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 15px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .announcement-card h3 {
+            color: #eab308;
+            font-size: 1rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .announcement-card p {
+            font-size: 0.88rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        .announcement-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 0.68rem;
+            color: rgba(255, 255, 255, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 8px;
+        }
+        .announcement-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .announcement-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+        .announcement-btn:hover { color: #eab308; }
+        .announcement-btn.del-btn:hover { color: #ff4d5e; }
+
+        /* Admin Announcement Input Console */
+        .announce-admin-dock {
+            padding: 15px;
+            background: rgba(234, 179, 8, 0.02);
+            border-top: 1px solid rgba(234, 179, 8, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .announce-admin-dock input, .announce-admin-dock textarea {
+            width: 100%;
+            background: rgba(12, 16, 27, 0.7);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: #fff;
+            outline: none;
+            font-size: 0.85rem;
+        }
+        .announce-admin-dock textarea { resize: none; height: 70px; }
+        .announce-submit-btn {
+            background: #eab308;
+            color: #000;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .announce-submit-btn:hover {
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.4);
+            transform: translateY(-2px);
+        }
+
         /* Media Bubble Layouts */
         .chat-media-img { max-width: 250px; max-height: 250px; border-radius: 12px; display: block; margin-bottom: 5px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
         .chat-media-video { max-width: 280px; max-height: 250px; border-radius: 12px; display: block; margin-bottom: 5px; outline: none; border: 1px solid rgba(255,255,255,0.1); }
@@ -301,6 +388,11 @@
                     <i class="fa-solid fa-gear"></i>
                     <span>SETTINGS</span>
                 </div>
+                <!-- ANNOUNCEMENT NAVIGATION LINK -->
+                <div class="nav-item announce-nav" id="navAnnounceLink" title="Announcements">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span>ANNOUNCE</span>
+                </div>
             </div>
             <button class="power-btn" id="stripLogoutBtn"><i class="fa-solid fa-power-off"></i></button>
         </nav>
@@ -346,6 +438,13 @@
                 </div>
 
                 <div class="messages-box" id="messages"></div>
+
+                <!-- ADMIN ANNOUNCEMENT CREATION DOCK -->
+                <div class="announce-admin-dock" id="announceAdminDock" style="display: none;">
+                    <input type="text" id="announceTitleInput" placeholder="Announcement Title...">
+                    <textarea id="announceBodyInput" placeholder="Write announcement details here..."></textarea>
+                    <button class="announce-submit-btn" id="publishAnnounceBtn"><i class="fa-solid fa-paper-plane"></i> Publish Announcement</button>
+                </div>
 
                 <footer class="input-dock" id="chatInputDock">
                     <div class="dock-wrapper" id="dockWrapper">
@@ -466,6 +565,9 @@
       const db = getDatabase(app);
       const auth = getAuth(app); 
 
+      /* APP CREATOR / ADMIN USERNAME */
+      const ADMIN_USERNAME = "dasithdamsara";
+
       let currentMode = "direct"; 
       let selectedTargetID = ""; 
       let selectedTargetName = "";
@@ -486,6 +588,15 @@
           if (!rawUsername) return "@username";
           let clean = rawUsername.toString().replace(/^@/, '').toLowerCase().replace(/[^a-z0-9_]/g, '');
           return `@${clean}`;
+      }
+
+      function cleanUsernameStr(raw) {
+          if(!raw) return "";
+          return raw.toString().replace(/^@/, '').toLowerCase().replace(/[^a-z0-9_]/g, '');
+      }
+
+      function isAdminUser() {
+          return cleanUsernameStr(myUsername) === ADMIN_USERNAME;
       }
 
       /* Real-time username input auto-formatting */
@@ -529,6 +640,7 @@
       const navDirectLink = document.getElementById('navDirectLink');
       const navGroupLink = document.getElementById('navGroupLink');
       const navSettingsLink = document.getElementById('navSettingsLink');
+      const navAnnounceLink = document.getElementById('navAnnounceLink');
       
       const activeChatBadge = document.getElementById('activeChatBadge');
       const chatMainTitle = document.getElementById('chatMainTitle');
@@ -549,6 +661,11 @@
       const rightPanelDynamicContent = document.getElementById('rightPanelDynamicContent');
       const dockWrapper = document.getElementById('dockWrapper');
 
+      const announceAdminDock = document.getElementById('announceAdminDock');
+      const announceTitleInput = document.getElementById('announceTitleInput');
+      const announceBodyInput = document.getElementById('announceBodyInput');
+      const publishAnnounceBtn = document.getElementById('publishAnnounceBtn');
+
       /* File Attachment DOM Elements */
       const chatFileInput = document.getElementById('chatFileInput');
       const fileInputTrigger = document.getElementById('fileInputTrigger');
@@ -560,8 +677,8 @@
       // Process uploaded file
       function processAndSendFile(file) {
           if(!file) return;
-          if(!selectedTargetID) {
-              alert("Please select a user or group to send files!");
+          if(!selectedTargetID || currentMode === 'announce') {
+              alert("Please select a user or group chat to send files!");
               return;
           }
 
@@ -636,7 +753,7 @@
       });
 
       function sendMediaPacket(mediaData, fileType, fileName) {
-          if(!selectedTargetID) return;
+          if(!selectedTargetID || currentMode === 'announce') return;
           const path = getActiveDatabaseRefPath();
 
           const pack = {
@@ -685,9 +802,11 @@
           if(currentMode === 'direct') {
               activeChatBadge.innerText = "MODE: DIRECT CHAT";
               if(feedTitleText) feedTitleText.innerText = "ONLINE_TERMINALS (DMs)";
+          } else if(currentMode === 'announce') {
+              activeChatBadge.innerText = "MODE: ANNOUNCEMENTS";
+              if(feedTitleText) feedTitleText.innerText = "BROADCAST HUB";
           } else {
               if(selectedTargetID === 'global_hub') activeChatBadge.innerText = "MODE: GLOBAL HUB";
-              else if(selectedTargetID === 'system_announcements') activeChatBadge.innerText = "MODE: ANNOUNCEMENT";
               else activeChatBadge.innerText = "MODE: PRIVATE GROUP";
               if(feedTitleText) feedTitleText.innerText = "CHANNELS (GROUPS)";
           }
@@ -713,6 +832,15 @@
                       myPhotoURL = user.photoURL || "";
                   }
                   updateRightProfileCard(myName, myUsername, myPhotoURL);
+                  
+                  // Re-evaluate admin dock display when admin auth state resolves
+                  if(currentMode === "announce") {
+                      if (isAdminUser()) {
+                          announceAdminDock.style.display = 'flex';
+                      } else {
+                          announceAdminDock.style.display = 'none';
+                      }
+                  }
               });
 
               updateHeaderAvatarModal();
@@ -721,10 +849,11 @@
               signUpWrapper.style.display = 'none';
               chatScreenWrapper.style.display = 'grid';
               
+              // Only update specific fields of the current logged-in user (Complies with Security Rules)
               update(ref(db, `users/${user.uid}`), {
                   uid: user.uid,
                   lastSeen: Date.now()
-              });
+              }).catch(err => console.log("User tracking updated"));
 
               onValue(ref(db, `users/${user.uid}/themeColor`), (snap) => {
                   if(snap.exists()) {
@@ -822,6 +951,7 @@
           navDirectLink.classList.add('active');
           navGroupLink.classList.remove('active');
           navSettingsLink.classList.remove('active');
+          navAnnounceLink.classList.remove('active');
           openGroupModalBtn.style.display = 'none';
           
           document.getElementById('chatTheaterFrame').className = "chat-theater theme-direct";
@@ -840,6 +970,7 @@
           blockUserBtn.style.display = 'none';
           unblockUserBtn.style.display = 'none';
           groupRulesBanner.style.display = 'none';
+          announceAdminDock.style.display = 'none';
           document.getElementById('chatInputDock').style.display = 'block';
           document.getElementById('blockStatusNotice').style.display = 'none';
           
@@ -855,6 +986,7 @@
           navGroupLink.classList.add('active');
           navDirectLink.classList.remove('active');
           navSettingsLink.classList.remove('active');
+          navAnnounceLink.classList.remove('active');
           openGroupModalBtn.style.display = 'block';
           
           document.getElementById('chatTheaterFrame').className = "chat-theater theme-group";
@@ -873,6 +1005,7 @@
           blockUserBtn.style.display = 'none';
           unblockUserBtn.style.display = 'none';
           groupRulesBanner.style.display = 'none';
+          announceAdminDock.style.display = 'none';
           document.getElementById('chatInputDock').style.display = 'block';
           document.getElementById('blockStatusNotice').style.display = 'none';
           
@@ -882,6 +1015,48 @@
           refreshDynamicUIHeadings();
           loadUsersAndChannelsList();
           listenToMessages();
+      };
+
+      /* ANNOUNCEMENT LINK CLICK EVENT */
+      navAnnounceLink.onclick = () => {
+          currentMode = "announce";
+          navAnnounceLink.classList.add('active');
+          navDirectLink.classList.remove('active');
+          navGroupLink.classList.remove('active');
+          navSettingsLink.classList.remove('active');
+          openGroupModalBtn.style.display = 'none';
+
+          document.getElementById('chatTheaterFrame').className = "chat-theater theme-direct";
+          usersListContainer.className = "user-list theme-direct-list";
+          
+          selectedTargetID = "system_announcements";
+          selectedTargetName = "ANNOUNCEMENTS";
+          chatMainTitle.innerText = "ANNOUNCEMENTS";
+          chatSubTitle.innerText = "// OFFICIAL SYSTEM UPDATES";
+
+          updateRightProfileCard("ANNOUNCEMENTS", "admin", "");
+
+          clearChatBtn.style.display = 'none';
+          leaveGroupBtn.style.display = 'none';
+          deleteGroupBtn.style.display = 'none';
+          blockUserBtn.style.display = 'none';
+          unblockUserBtn.style.display = 'none';
+          groupRulesBanner.style.display = 'none';
+
+          document.getElementById('chatInputDock').style.display = 'none';
+
+          if (isAdminUser()) {
+              announceAdminDock.style.display = 'flex';
+          } else {
+              announceAdminDock.style.display = 'none';
+          }
+
+          rightPanelContextTitle.innerText = "ANNOUNCEMENT_LOGS";
+          rightPanelDynamicContent.innerHTML = `<p class="details-desc" style="color: rgba(255,255,255,0.7);"><strong>System Feed:</strong> Official app announcements and updates released directly by Admin (@${ADMIN_USERNAME}).</p>`;
+
+          refreshDynamicUIHeadings();
+          loadUsersAndChannelsList();
+          listenToAnnouncements();
       };
 
       navSettingsLink.onclick = () => { document.getElementById('headerProfileBtn').click(); };
@@ -916,6 +1091,18 @@
       }
 
       function loadUsersAndChannelsList() {
+          if(currentMode === "announce") {
+              usersListContainer.innerHTML = "";
+              const item = document.createElement('div');
+              item.className = 'user-item active';
+              item.innerHTML = `<div class="user-alt-avatar" style="background:#eab308; color:#000;"><i class="fa-solid fa-bullhorn"></i></div><div class="user-info"><h4>SYSTEM ANNOUNCEMENTS</h4><p>// OFFICIAL UPDATES</p></div>`;
+              item.onclick = () => {
+                  listenToAnnouncements();
+              };
+              usersListContainer.appendChild(item);
+              return;
+          }
+
           if(currentMode === "direct") {
               usersListContainer.innerHTML = "";
               Object.keys(cachedAllUsers).forEach(uid => {
@@ -959,8 +1146,7 @@
           } else {
               usersListContainer.innerHTML = "";
               const preChannels = [
-                  { id: 'global_hub', name: 'GLOBAL HUB', subtitle: '// PUBLIC CHAT ROOM' },
-                  { id: 'system_announcements', name: 'ANNOUNCEMENTS', subtitle: '// READ ONLY CONSOLE' }
+                  { id: 'global_hub', name: 'GLOBAL HUB', subtitle: '// PUBLIC CHAT ROOM' }
               ];
               
               preChannels.forEach(ch => {
@@ -1051,6 +1237,95 @@
           }
       }
 
+      /* ADMIN ANNOUNCEMENT BROADCASTING & MANAGEMENT */
+      publishAnnounceBtn.onclick = () => {
+          if (!isAdminUser()) {
+              alert("Unauthorized: Admin privileges required.");
+              return;
+          }
+          const title = announceTitleInput.value.trim();
+          const body = announceBodyInput.value.trim();
+
+          if (!title || !body) {
+              alert("Please enter both a title and description for the announcement.");
+              return;
+          }
+
+          const annKey = push(ref(db, 'system_announcements')).key;
+          set(ref(db, `system_announcements/${annKey}`), {
+              id: annKey,
+              title: title,
+              body: body,
+              timestamp: Date.now(),
+              author: myName || "Admin"
+          }).then(() => {
+              announceTitleInput.value = "";
+              announceBodyInput.value = "";
+          }).catch(err => {
+              alert("Error publishing: " + err.message);
+          });
+      };
+
+      window.editAnnouncement = function(key, currentTitle, currentBody) {
+          if (!isAdminUser()) return;
+          const newTitle = prompt("Edit Announcement Title:", currentTitle);
+          if (newTitle === null) return;
+          const newBody = prompt("Edit Announcement Details:", currentBody);
+          if (newBody === null) return;
+
+          if (newTitle.trim() && newBody.trim()) {
+              update(ref(db, `system_announcements/${key}`), {
+                  title: newTitle.trim(),
+                  body: newBody.trim()
+              });
+          }
+      };
+
+      window.deleteAnnouncement = function(key) {
+          if (!isAdminUser()) return;
+          if (confirm("Are you sure you want to delete this announcement? ⚠️")) {
+              remove(ref(db, `system_announcements/${key}`));
+          }
+      };
+
+      function listenToAnnouncements() {
+          onValue(ref(db, 'system_announcements'), (snapshot) => {
+              if (currentMode !== 'announce') return;
+              messagesBox.innerHTML = "";
+              if (snapshot.exists()) {
+                  const data = snapshot.val();
+                  Object.keys(data).forEach(key => {
+                      const ann = data[key];
+                      const card = document.createElement('div');
+                      card.className = 'announcement-card';
+
+                      let adminActions = "";
+                      if (isAdminUser()) {
+                          adminActions = `
+                              <div class="announcement-actions">
+                                  <button class="announcement-btn" onclick="editAnnouncement('${key}', \`${ann.title.replace(/'/g, "\\'")}\`, \`${ann.body.replace(/'/g, "\\'")}\`)"><i class="fa-solid fa-pen"></i></button>
+                                  <button class="announcement-btn del-btn" onclick="deleteAnnouncement('${key}')"><i class="fa-solid fa-trash"></i></button>
+                              </div>
+                          `;
+                      }
+
+                      card.innerHTML = `
+                          <h3><i class="fa-solid fa-bullhorn"></i> ${ann.title}</h3>
+                          <p>${ann.body}</p>
+                          <div class="announcement-meta">
+                              <span>By ${ann.author || 'Admin'} • ${formatTimestamp(ann.timestamp)}</span>
+                              ${adminActions}
+                          </div>
+                      `;
+                      messagesBox.appendChild(card);
+                  });
+                  messagesBox.scrollTop = messagesBox.scrollHeight;
+              } else {
+                  messagesBox.innerHTML = `<div style="text-align:center; color:rgba(255,255,255,0.3); margin-top:30px; font-size:0.85rem;">No active announcements currently published.</div>`;
+              }
+          });
+      }
+
       blockUserBtn.onclick = () => {
           if (!selectedTargetID || currentMode !== "direct") return;
           if (confirm(`Are you sure you want to block ${selectedTargetName}?`)) {
@@ -1132,10 +1407,11 @@
       }
 
       function listenToMessages() {
-          if(!selectedTargetID) return;
+          if(!selectedTargetID || currentMode === 'announce') return;
           const path = getActiveDatabaseRefPath();
           
           onValue(ref(db, path), (snapshot) => {
+              if (currentMode === 'announce') return;
               messagesBox.innerHTML = "";
               if(snapshot.exists()) {
                   const data = snapshot.val();
@@ -1218,7 +1494,7 @@
 
       function handlePacketTransmission() {
           const txt = messageInput.value.trim();
-          if(!txt || !selectedTargetID) return;
+          if(!txt || !selectedTargetID || currentMode === 'announce') return;
           const path = getActiveDatabaseRefPath();
           
           const pack = {
