@@ -682,6 +682,13 @@
               return;
           }
 
+          if (currentMode === 'direct') {
+              if (blockList[selectedTargetID] === true) {
+                  alert("You cannot send files to a user you have blocked!");
+                  return;
+              }
+          }
+
           // Restrict file size to ~3MB to ensure Realtime Database payload compatibility
           if(file.size > 3 * 1024 * 1024) {
               alert("File size exceeds 3MB limit! Please upload a smaller file.");
@@ -758,6 +765,7 @@
 
           const pack = {
               senderID: currentUserUID,
+              receiverID: currentMode === 'direct' ? selectedTargetID : "",
               senderName: myName || "User",
               senderPhoto: myPhotoURL || "",
               mediaUrl: mediaData,
@@ -833,7 +841,6 @@
                   }
                   updateRightProfileCard(myName, myUsername, myPhotoURL);
                   
-                  // Re-evaluate admin dock display when admin auth state resolves
                   if(currentMode === "announce") {
                       if (isAdminUser()) {
                           announceAdminDock.style.display = 'flex';
@@ -849,7 +856,6 @@
               signUpWrapper.style.display = 'none';
               chatScreenWrapper.style.display = 'grid';
               
-              // Only update specific fields of the current logged-in user (Complies with Security Rules)
               update(ref(db, `users/${user.uid}`), {
                   uid: user.uid,
                   lastSeen: Date.now()
@@ -889,7 +895,7 @@
           const mPlaceholder = document.getElementById('modalAvatarPlaceholder');
           
           let srcToUse = tempSrc !== null ? tempSrc : myPhotoURL;
-          if (newSelectedBase64Photo === "") srcToUse = ""; // Marked as deleted
+          if (newSelectedBase64Photo === "") srcToUse = ""; 
 
           if(srcToUse) {
               mPlaceholder.innerHTML = `<img src="${srcToUse}" style="width:100%; height:100%; object-fit:cover;">`;
@@ -1495,10 +1501,19 @@
       function handlePacketTransmission() {
           const txt = messageInput.value.trim();
           if(!txt || !selectedTargetID || currentMode === 'announce') return;
+
+          if (currentMode === 'direct') {
+              if (blockList[selectedTargetID] === true) {
+                  alert("You cannot send messages to a user you have blocked!");
+                  return;
+              }
+          }
+
           const path = getActiveDatabaseRefPath();
           
           const pack = {
               senderID: currentUserUID,
+              receiverID: currentMode === 'direct' ? selectedTargetID : "",
               senderName: myName || "User",
               senderPhoto: myPhotoURL || "",
               message: txt,
@@ -1531,14 +1546,12 @@
       const deleteAvatarBtn = document.getElementById('deleteAvatarBtn');
       const profilePhotoInput = document.getElementById('profilePhotoInput');
 
-      // Click Edit (Pencil) Button
       editAvatarBtn.onclick = () => {
           profilePhotoInput.click();
       };
 
-      // Click Delete (Trash Can) Button
       deleteAvatarBtn.onclick = () => {
-          newSelectedBase64Photo = ""; // Mark as empty to remove photo
+          newSelectedBase64Photo = "";
           updateHeaderAvatarModal("");
       };
 
@@ -1561,12 +1574,10 @@
       /* Dynamic Opening & Field Pre-filling for Settings Modal */
       document.getElementById('headerProfileBtn').onclick = () => {
           profileModalOverlay.style.display = 'flex';
-          newSelectedBase64Photo = null; // Reset temp holder
+          newSelectedBase64Photo = null;
           
-          // Pre-fill Name in upper field
           document.getElementById('profileNameInput').value = myName || "";
           
-          // Pre-fill Username with @ prefix in lower field
           document.getElementById('profileUsernameInput').value = formatDisplayUsername(myUsername);
           document.getElementById('usernameErrorMsg').style.display = 'none';
           
@@ -1600,13 +1611,11 @@
               errorMsg.style.display = 'none';
           }
 
-          // Determine final photo URL to store
           let photoToSave = myPhotoURL;
           if (newSelectedBase64Photo !== null) {
-              photoToSave = newSelectedBase64Photo; // will be base64 string or "" (if deleted)
+              photoToSave = newSelectedBase64Photo;
           }
 
-          /* Update user node parameters in Realtime Database */
           update(ref(db, `users/${currentUserUID}`), {
               name: typedName, 
               username: typedUsername,
@@ -1622,7 +1631,6 @@
                   updateProfile(auth.currentUser, { photoURL: photoToSave });
               }
 
-              /* Instant sync across profile elements */
               updateRightProfileCard(myName, myUsername, myPhotoURL);
               updateHeaderAvatarModal();
               profileModalOverlay.style.display = 'none';
