@@ -58,22 +58,12 @@
 
         .chat-theater { background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); height: 100%; position: relative; transition: border-color 0.3s, box-shadow 0.3s; }
         
-        /* Drag & Drop Overlay Animation */
-        .chat-theater.drag-over {
-            border: 2px dashed var(--neon-accent) !important;
-            box-shadow: 0 0 30px var(--neon-glow) !important;
-        }
-        .drag-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 4, 10, 0.85); backdrop-filter: blur(10px);
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 90; pointer-events: none; border-radius: 24px;
-        }
+        .chat-theater.drag-over { border: 2px dashed var(--neon-accent) !important; box-shadow: 0 0 30px var(--neon-glow) !important; }
+        .drag-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 4, 10, 0.85); backdrop-filter: blur(10px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 90; pointer-events: none; border-radius: 24px; }
         .drag-overlay i { font-size: 3.5rem; color: var(--neon-accent); margin-bottom: 15px; animation: pulse 1s infinite; }
         .drag-overlay p { font-size: 1.1rem; font-weight: bold; letter-spacing: 1px; color: #fff; }
 
         .theater-header { padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); gap: 10px; }
-        
         .mobile-back-btn { display: none; background: transparent; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding-right: 10px; }
 
         .theater-title { padding: 4px 8px; border-radius: 12px; transition: all 0.3s ease; display: flex; flex-direction: column; }
@@ -82,7 +72,6 @@
         
         .header-actions { display: flex; gap: 10px; align-items: center; }
 
-        /* Sidebar Action Grid */
         .sidebar-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 5px; }
         .action-trigger-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); padding: 12px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; text-transform: uppercase; }
         .action-trigger-btn i { font-size: 0.85rem; }
@@ -95,7 +84,6 @@
 
         .messages-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
         
-        /* DATE DIVIDER STYLES */
         .date-divider { display: flex; align-items: center; justify-content: center; margin: 15px 0; position: relative; }
         .date-divider::before { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: rgba(255, 255, 255, 0.08); z-index: 1; }
         .date-divider span { position: relative; z-index: 2; background: rgba(12, 16, 27, 0.85); padding: 4px 14px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.68rem; font-weight: bold; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px); }
@@ -117,100 +105,76 @@
         .bubble { padding: 10px 16px; border-radius: 4px 16px 16px 16px; font-size: 0.9rem; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); word-break: break-word; position: relative; }
         .msg-row.outgoing .bubble { border-radius: 16px 4px 16px 16px; background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 255, 255, 0.15); }
         
-        /* Announcement Card Styling */
-        .announcement-card {
-            background: linear-gradient(135deg, rgba(234, 179, 8, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-            border: 1px solid rgba(234, 179, 8, 0.3);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 15px;
-            position: relative;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .announcement-card h3 {
-            color: #eab308;
-            font-size: 1rem;
+        /* Reply Message Box Styling */
+        .quoted-reply-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--neon-accent);
+            padding: 4px 8px;
+            border-radius: 4px;
             margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
         }
-        .announcement-card p {
-            font-size: 0.88rem;
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.5;
-            white-space: pre-wrap;
+        .quoted-reply-sender {
+            font-weight: bold;
+            color: var(--neon-accent);
+            font-size: 0.7rem;
         }
-        .announcement-meta {
-            display: flex;
+
+        /* Reply Dock Active Banner */
+        .reply-preview-dock {
+            display: none;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
-            font-size: 0.68rem;
-            color: rgba(255, 255, 255, 0.4);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 8px;
-        }
-        .announcement-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .announcement-btn {
-            background: transparent;
-            border: none;
-            color: rgba(255,255,255,0.6);
-            cursor: pointer;
+            background: rgba(0, 240, 255, 0.05);
+            border-left: 3px solid var(--neon-accent);
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
             font-size: 0.8rem;
-            transition: 0.2s;
         }
+
+        /* Typing Indicator UI */
+        .typing-indicator-bar {
+            font-size: 0.75rem;
+            color: var(--neon-accent);
+            font-style: italic;
+            padding: 4px 20px;
+            height: 20px;
+        }
+
+        /* Status Ticks (Seen/Read receipts) */
+        .status-tick {
+            font-size: 0.65rem;
+            margin-left: 4px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .status-tick.seen {
+            color: var(--neon-accent);
+        }
+
+        .announcement-card { background: linear-gradient(135deg, rgba(234, 179, 8, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 16px; padding: 16px; margin-bottom: 15px; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .announcement-card h3 { color: #eab308; font-size: 1rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .announcement-card p { font-size: 0.88rem; color: rgba(255, 255, 255, 0.85); line-height: 1.5; white-space: pre-wrap; }
+        .announcement-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.68rem; color: rgba(255, 255, 255, 0.4); border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 8px; }
+        .announcement-actions { display: flex; gap: 10px; }
+        .announcement-btn { background: transparent; border: none; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
         .announcement-btn:hover { color: #eab308; }
         .announcement-btn.del-btn:hover { color: #ff4d5e; }
 
-        /* Admin Announcement Input Console */
-        .announce-admin-dock {
-            padding: 15px;
-            background: rgba(234, 179, 8, 0.02);
-            border-top: 1px solid rgba(234, 179, 8, 0.2);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .announce-admin-dock input, .announce-admin-dock textarea {
-            width: 100%;
-            background: rgba(12, 16, 27, 0.7);
-            border: 1px solid rgba(234, 179, 8, 0.3);
-            border-radius: 10px;
-            padding: 10px 14px;
-            color: #fff;
-            outline: none;
-            font-size: 0.85rem;
-        }
+        .announce-admin-dock { padding: 15px; background: rgba(234, 179, 8, 0.02); border-top: 1px solid rgba(234, 179, 8, 0.2); display: flex; flex-direction: column; gap: 10px; }
+        .announce-admin-dock input, .announce-admin-dock textarea { width: 100%; background: rgba(12, 16, 27, 0.7); border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 10px; padding: 10px 14px; color: #fff; outline: none; font-size: 0.85rem; }
         .announce-admin-dock textarea { resize: none; height: 70px; }
-        .announce-submit-btn {
-            background: #eab308;
-            color: #000;
-            border: none;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-        .announce-submit-btn:hover {
-            box-shadow: 0 0 15px rgba(234, 179, 8, 0.4);
-            transform: translateY(-2px);
-        }
+        .announce-submit-btn { background: #eab308; color: #000; border: none; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .announce-submit-btn:hover { box-shadow: 0 0 15px rgba(234, 179, 8, 0.4); transform: translateY(-2px); }
 
-        /* Media & Audio Bubble Layouts */
         .chat-media-img { max-width: 250px; max-height: 250px; border-radius: 12px; display: block; margin-bottom: 5px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
         .chat-media-video { max-width: 280px; max-height: 250px; border-radius: 12px; display: block; margin-bottom: 5px; outline: none; border: 1px solid rgba(255,255,255,0.1); }
         .chat-media-file { display: flex; align-items: center; gap: 10px; padding: 6px 10px; background: rgba(255,255,255,0.05); border-radius: 8px; color: var(--neon-accent); text-decoration: none; font-size: 0.85rem; font-weight: bold; }
         .chat-media-file:hover { background: rgba(255,255,255,0.1); }
-        
         .chat-audio-player { outline: none; max-width: 240px; height: 38px; border-radius: 20px; margin-top: 2px; }
 
-        .msg-timestamp { font-size: 0.65rem; color: rgba(255,255,255,0.3); margin-top: 4px; display: block; letter-spacing: 0.5px; }
+        .msg-timestamp { font-size: 0.65rem; color: rgba(255,255,255,0.3); margin-top: 4px; display: flex; align-items: center; letter-spacing: 0.5px; }
         
         .msg-actions-trigger { display: none; gap: 6px; }
         .bubble-wrapper:hover .msg-actions-trigger, .msg-row:active .msg-actions-trigger { display: flex; }
@@ -218,7 +182,6 @@
         .msg-action-inline-btn:hover { color: #fff; }
         .msg-action-inline-btn.delete:hover { color: #ff4d5e; }
 
-        /* Input Dock & Recording Bar */
         .input-dock { padding: 15px 20px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--glass-border); position: relative; }
         .dock-wrapper { display: flex; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); border-radius: 16px; padding: 4px 8px; align-items: center; position: relative; transition: border-color 0.3s; }
         .dock-wrapper:focus-within { border-color: var(--neon-accent); box-shadow: 0 0 15px rgba(0, 240, 255, 0.1); }
@@ -237,34 +200,10 @@
         .data-hub { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; height: 100%; }
         .hub-card { background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px; height: 100%; display: flex; flex-direction: column; }
         
-        /* SEARCH BAR STYLING */
-        .search-box-container {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 8px 12px;
-            margin-bottom: 12px;
-            transition: 0.3s;
-        }
-        .search-box-container:focus-within {
-            border-color: var(--neon-accent);
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
-        }
-        .search-box-container i {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.85rem;
-            margin-right: 8px;
-        }
-        .search-box-container input {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #fff;
-            font-size: 0.8rem;
-            width: 100%;
-        }
+        .search-box-container { display: flex; align-items: center; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 12px; padding: 8px 12px; margin-bottom: 12px; transition: 0.3s; }
+        .search-box-container:focus-within { border-color: var(--neon-accent); box-shadow: 0 0 10px rgba(0, 240, 255, 0.15); }
+        .search-box-container i { color: rgba(255, 255, 255, 0.4); font-size: 0.85rem; margin-right: 8px; }
+        .search-box-container input { background: transparent; border: none; outline: none; color: #fff; font-size: 0.8rem; width: 100%; }
 
         .right-sidebar { background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border); border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
         
@@ -278,11 +217,13 @@
         .create-group-trigger-btn { background: transparent; border: 1px dashed var(--purple-accent); color: var(--purple-accent); padding: 4px 10px; border-radius: 8px; font-size: 0.65rem; cursor: pointer; font-weight: bold; }
 
         .user-list { display: flex; flex-direction: column; gap: 8px; flex: 1; overflow-y: auto; }
-        .user-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; cursor: pointer; border: 1px solid transparent; background: rgba(255,255,255,0.01); transition: 0.2s; }
+        .user-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; cursor: pointer; border: 1px solid transparent; background: rgba(255,255,255,0.01); transition: 0.2s; position: relative; }
         .user-item:hover, .user-item.active { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
         .user-item img, .user-item .user-alt-avatar { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; display: flex; justify-content: center; align-items: center; font-size: 0.85rem; font-weight: bold; }
         .user-info h4 { font-size: 0.8rem; color: rgba(255,255,255,0.9); font-weight: 600; }
         .user-info p { font-size: 0.65rem; color: rgba(255,255,255,0.4); margin-top: 2px; }
+
+        .online-dot-badge { width: 8px; height: 8px; background: #00ff87; border-radius: 50%; position: absolute; right: 12px; box-shadow: 0 0 8px #00ff87; }
 
         .details-panel-card { background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         .details-panel-card h4 { font-family: 'Syncopate', sans-serif; font-size: 0.7rem; color: var(--neon-accent); border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; margin-bottom: 5px; }
@@ -296,57 +237,14 @@
         .modal-btn { width: 100%; padding: 12px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; text-transform: uppercase; font-size: 0.8rem; }
         .save-profile-btn { background: #fff; color: #000; }
 
-        /* PROFILE PHOTO CONTAINER & ACTION BUTTONS */
-        .modal-avatar-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            margin: 15px 0;
-        }
-        .modal-avatar-wrapper {
-            position: relative;
-            width: 85px;
-            height: 85px;
-            border: 2px solid var(--neon-accent);
-            border-radius: 20px;
-            overflow: hidden;
-            background: var(--bg-dark);
-        }
+        .modal-avatar-container { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 15px 0; }
+        .modal-avatar-wrapper { position: relative; width: 85px; height: 85px; border: 2px solid var(--neon-accent); border-radius: 20px; overflow: hidden; background: var(--bg-dark); }
         .modal-avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; }
         
-        .avatar-action-btns {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-        }
-        .avatar-icon-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.8);
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: 0.3s;
-        }
-        .avatar-icon-btn:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.15);
-            border-color: var(--neon-accent);
-            transform: translateY(-2px);
-        }
-        .avatar-icon-btn.delete-icon:hover {
-            color: #ff4d5e;
-            background: rgba(220, 53, 69, 0.15);
-            border-color: #ff4d5e;
-            box-shadow: 0 0 12px rgba(220, 53, 69, 0.3);
-        }
+        .avatar-action-btns { display: flex; gap: 15px; justify-content: center; align-items: center; }
+        .avatar-icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); color: rgba(255, 255, 255, 0.8); width: 40px; height: 40px; border-radius: 12px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
+        .avatar-icon-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.15); border-color: var(--neon-accent); transform: translateY(-2px); }
+        .avatar-icon-btn.delete-icon:hover { color: #ff4d5e; background: rgba(220, 53, 69, 0.15); border-color: #ff4d5e; box-shadow: 0 0 12px rgba(220, 53, 69, 0.3); }
 
         .member-select-list { max-height: 160px; overflow-y: auto; text-align: left; margin: 12px 0; padding: 5px; border: 1px solid var(--glass-border); border-radius: 10px; background: rgba(0,0,0,0.2); }
         .member-select-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.85rem; }
@@ -361,7 +259,6 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
-        /* Mobile Layout Stack */
         @media screen and (max-width: 1024px) {
             body { align-items: flex-start; overflow-y: auto; height: auto; min-height: 100dvh; }
             .interface-grid { width: 100vw; height: auto; min-height: 100dvh; display: flex; flex-direction: column; gap: 15px; padding: 10px; }
@@ -397,7 +294,7 @@
         <div class="auth-toggle-text">Don't have an account? <a id="goToSignUp">Sign Up</a></div>
     </div>
 
-    <!-- REGISTER CONSOLE WITH USERNAME INPUT -->
+    <!-- REGISTER CONSOLE -->
     <div class="auth-wrapper" id="signUpScreenWrapper" style="display: none;">
         <h2>Lightneee</h2>
         <p>// REGISTER CONSOLE</p>
@@ -426,12 +323,10 @@
                     <i class="fa-solid fa-earth-asia"></i>
                     <span>GROUP</span>
                 </div>
-                <!-- ANNOUNCEMENT NAVIGATION LINK -->
                 <div class="nav-item announce-nav" id="navAnnounceLink" title="Announcements">
                     <i class="fa-solid fa-bullhorn"></i>
                     <span>ANNOUNCE</span>
                 </div>
-                <!-- SETTINGS NAVIGATION LINK -->
                 <div class="nav-item settings-nav" id="navSettingsLink">
                     <i class="fa-solid fa-gear"></i>
                     <span>SETTINGS</span>
@@ -440,7 +335,7 @@
             <button class="power-btn" id="stripLogoutBtn"><i class="fa-solid fa-power-off"></i></button>
         </nav>
 
-        <!-- CENTER STAGE (FEEDS & CHAT) -->
+        <!-- CENTER STAGE -->
         <div class="center-stage">
             <aside class="data-hub">
                 <div class="hub-card">
@@ -449,7 +344,6 @@
                         <button class="create-group-trigger-btn" id="openGroupModalBtn" style="display:none;"><i class="fa-solid fa-plus"></i> <span>NEW GROUP</span></button>
                     </div>
 
-                    <!-- SEARCH BAR FIELD -->
                     <div class="search-box-container">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" id="userSearchInput" placeholder="Search user or node...">
@@ -460,7 +354,6 @@
             </aside>
 
             <main class="chat-theater theme-direct" id="chatTheaterFrame">
-                <!-- DRAG & DROP OVERLAY -->
                 <div class="drag-overlay" id="dragOverlay">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                     <p>DROP FILES HERE TO TRANSMIT</p>
@@ -489,7 +382,9 @@
 
                 <div class="messages-box" id="messages"></div>
 
-                <!-- ADMIN ANNOUNCEMENT CREATION DOCK -->
+                <!-- TYPING INDICATOR UI -->
+                <div class="typing-indicator-bar" id="typingIndicator"></div>
+
                 <div class="announce-admin-dock" id="announceAdminDock" style="display: none;">
                     <input type="text" id="announceTitleInput" placeholder="Announcement Title...">
                     <textarea id="announceBodyInput" placeholder="Write announcement details here..."></textarea>
@@ -497,7 +392,15 @@
                 </div>
 
                 <footer class="input-dock" id="chatInputDock">
-                    <!-- RECORDING BAR OVERLAY -->
+                    <!-- REPLY PREVIEW DOCK -->
+                    <div class="reply-preview-dock" id="replyPreviewDock">
+                        <div>
+                            <span style="font-weight:bold; color:var(--neon-accent);" id="replyingToUser">Replying to...</span>
+                            <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);" id="replyingToText">Message preview</div>
+                        </div>
+                        <button style="background:transparent; border:none; color:#ff4d5e; cursor:pointer;" id="cancelReplyBtn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
                     <div class="recording-bar" id="recordingBar">
                         <div class="recording-indicator">
                             <div class="rec-dot"></div>
@@ -510,11 +413,8 @@
                     </div>
 
                     <div class="dock-wrapper" id="dockWrapper">
-                        <!-- ATTACHMENT FILE INPUT & BUTTON -->
                         <input type="file" id="chatFileInput" style="display: none;">
                         <button class="action-btn" id="fileInputTrigger" title="Attach Media or File"><i class="fa-solid fa-paperclip"></i></button>
-                        
-                        <!-- VOICE MESSAGE BUTTON -->
                         <button class="action-btn" id="voiceRecBtn" title="Record Voice Message"><i class="fa-solid fa-microphone"></i></button>
 
                         <input type="text" id="messageInput" class="dock-input" placeholder="Transmit data stream...">
@@ -525,7 +425,7 @@
             </main>
         </div>
 
-        <!-- RIGHT SIDEBAR / USER PROFILE PANEL -->
+        <!-- RIGHT SIDEBAR -->
         <aside class="right-sidebar">
             <div class="premium-profile" id="headerProfileBtn" style="cursor:pointer;">
                 <div class="avatar-container">
@@ -554,35 +454,27 @@
         </aside>
     </div>
 
-    <!-- MODAL POPUPS -->
+    <!-- MODALS -->
     <div class="modal-overlay" id="profileModalOverlay">
         <div class="profile-modal">
             <span class="modal-close" id="closeModalBtn"><i class="fa-solid fa-xmark"></i></span>
             <h3>SETTINGS_CONSOLE</h3>
             
-            <!-- AVATAR UPLOADER WITH EDIT & DELETE ICONS -->
             <div class="modal-avatar-container">
                 <div class="modal-avatar-wrapper">
                     <div id="modalAvatarPlaceholder" style="width:100%; height:100%;"></div>
                 </div>
                 <div class="avatar-action-btns">
-                    <div class="avatar-icon-btn edit-icon" id="editAvatarBtn" title="Change Profile Picture">
-                        <i class="fa-solid fa-pencil"></i>
-                    </div>
-                    <div class="avatar-icon-btn delete-icon" id="deleteAvatarBtn" title="Delete Profile Picture">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </div>
+                    <div class="avatar-icon-btn edit-icon" id="editAvatarBtn" title="Change Profile Picture"><i class="fa-solid fa-pencil"></i></div>
+                    <div class="avatar-icon-btn delete-icon" id="deleteAvatarBtn" title="Delete Profile Picture"><i class="fa-solid fa-trash-can"></i></div>
                 </div>
             </div>
 
-            <!-- HIDDEN FILE INPUT FOR PROFILE PHOTO -->
             <input type="file" id="profilePhotoInput" accept="image/*" style="display: none;">
             
-            <!-- UPPER FIELD: FULL NAME -->
             <div style="font-size: 0.65rem; text-align: left; margin-top: 5px; color: var(--neon-accent); font-weight: bold; text-transform: uppercase;">Full Name:</div>
             <input type="text" id="profileNameInput" placeholder="Enter Full Name..." required>
             
-            <!-- LOWER FIELD: USERNAME WITH @ PREFIX -->
             <div style="font-size: 0.65rem; text-align: left; margin-top: 8px; color: var(--neon-accent); font-weight: bold; text-transform: uppercase;">Username:</div>
             <input type="text" id="profileUsernameInput" placeholder="@username" required>
             <div id="usernameErrorMsg" class="error-message">Please use lowercase English letters (a-z) or numbers for Username.</div>
@@ -613,7 +505,7 @@
     <!-- FIREBASE AND SYSTEM LOGIC -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getDatabase, ref, push, onValue, update, remove, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+      import { getDatabase, ref, push, onValue, update, remove, set, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
       import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
       const firebaseConfig = {
@@ -630,7 +522,6 @@
       const db = getDatabase(app);
       const auth = getAuth(app); 
 
-      /* APP CREATOR / ADMIN USERNAME */
       const ADMIN_USERNAME = "dasithdamsara";
 
       let currentMode = "direct"; 
@@ -648,7 +539,10 @@
       let blockList = {};
       let activeGroupMeta = null;
 
-      /* VOICE RECORDING VARIABLES */
+      /* QUOTE/REPLY & TYPING STATES */
+      let activeReplyData = null;
+      let typingTimeout = null;
+
       let mediaRecorder = null;
       let audioChunks = [];
       let recTimerInterval = null;
@@ -741,19 +635,94 @@
       const chatTheaterFrame = document.getElementById('chatTheaterFrame');
       const dragOverlay = document.getElementById('dragOverlay');
 
-      /* VOICE RECORDING ELEMENTS */
       const voiceRecBtn = document.getElementById('voiceRecBtn');
       const recordingBar = document.getElementById('recordingBar');
       const recTimer = document.getElementById('recTimer');
       const stopRecBtn = document.getElementById('stopRecBtn');
       const cancelRecBtn = document.getElementById('cancelRecBtn');
 
+      const replyPreviewDock = document.getElementById('replyPreviewDock');
+      const replyingToUser = document.getElementById('replyingToUser');
+      const replyingToText = document.getElementById('replyingToText');
+      const cancelReplyBtn = document.getElementById('cancelReplyBtn');
+      const typingIndicator = document.getElementById('typingIndicator');
+
       fileInputTrigger.onclick = () => chatFileInput.click();
 
-      /* REALTIME SEARCH INPUT LISTENER */
       userSearchInput.addEventListener('input', () => {
           loadUsersAndChannelsList();
       });
+
+      /* 1. TYPING INDICATOR REALTIME LOGIC */
+      messageInput.addEventListener('input', () => {
+          if(!selectedTargetID) return;
+          sendTypingStatus(true);
+          
+          clearTimeout(typingTimeout);
+          typingTimeout = setTimeout(() => {
+              sendTypingStatus(false);
+          }, 2000);
+      });
+
+      function sendTypingStatus(isTyping) {
+          if(!selectedTargetID || currentMode === 'announce') return;
+          let typingRefPath = '';
+          if(currentMode === 'direct') {
+              const pairID = currentUserUID < selectedTargetID ? `${currentUserUID}_${selectedTargetID}` : `${selectedTargetID}_${currentUserUID}`;
+              typingRefPath = `typing_status/${pairID}/${currentUserUID}`;
+          } else {
+              typingRefPath = `typing_status/${selectedTargetID}/${currentUserUID}`;
+          }
+          set(ref(db, typingRefPath), isTyping);
+      }
+
+      function listenToTypingStatus() {
+          if(!selectedTargetID || currentMode === 'announce') {
+              typingIndicator.innerText = '';
+              return;
+          }
+          let typingRefPath = '';
+          if(currentMode === 'direct') {
+              const pairID = currentUserUID < selectedTargetID ? `${currentUserUID}_${selectedTargetID}` : `${selectedTargetID}_${currentUserUID}`;
+              typingRefPath = `typing_status/${pairID}`;
+          } else {
+              typingRefPath = `typing_status/${selectedTargetID}`;
+          }
+
+          onValue(ref(db, typingRefPath), (snapshot) => {
+              if(snapshot.exists()) {
+                  const data = snapshot.val();
+                  let typingUsers = [];
+                  Object.keys(data).forEach(uid => {
+                      if(uid !== currentUserUID && data[uid] === true) {
+                          const name = cachedAllUsers[uid] ? cachedAllUsers[uid].name : "Someone";
+                          typingUsers.push(name);
+                      }
+                  });
+                  if(typingUsers.length > 0) {
+                      typingIndicator.innerText = `${typingUsers.join(', ')} is typing...`;
+                  } else {
+                      typingIndicator.innerText = '';
+                  }
+              } else {
+                  typingIndicator.innerText = '';
+              }
+          });
+      }
+
+      /* 2. REPLY / MESSAGE QUOTING LOGIC */
+      window.initiateInlineReply = function(msgKey, senderName, msgText) {
+          activeReplyData = { msgKey, senderName, msgText };
+          replyingToUser.innerText = `Replying to ${senderName}`;
+          replyingToText.innerText = msgText.length > 35 ? msgText.substring(0, 35) + "..." : msgText;
+          replyPreviewDock.style.display = 'flex';
+          messageInput.focus();
+      };
+
+      cancelReplyBtn.onclick = () => {
+          activeReplyData = null;
+          replyPreviewDock.style.display = 'none';
+      };
 
       /* VOICE RECORDING FUNCTIONALITY */
       voiceRecBtn.onclick = async () => {
@@ -923,10 +892,14 @@
               fileName: fileName || "Attachment",
               message: "",
               type: fileType,
-              timestamp: Date.now()
+              timestamp: Date.now(),
+              seen: false,
+              replyTo: activeReplyData ? activeReplyData : null
           };
 
           push(ref(db, path), pack);
+          activeReplyData = null;
+          replyPreviewDock.style.display = 'none';
       }
 
       function getActiveDatabaseRefPath() {
@@ -972,9 +945,27 @@
       document.getElementById('goToSignUp').onclick = () => { loginWrapper.style.display = 'none'; signUpWrapper.style.display = 'block'; };
       document.getElementById('goToLogin').onclick = () => { signUpWrapper.style.display = 'none'; loginWrapper.style.display = 'block'; };
 
+      /* 3. OFFLINE & LAST SEEN TRACKING SYSTEM */
       onAuthStateChanged(auth, (user) => {
           if (user) {
               currentUserUID = user.uid;
+
+              // Online / Offline tracking via Firebase connected state
+              const connectedRef = ref(db, ".info/connected");
+              const myStatusRef = ref(db, `users/${user.uid}`);
+
+              onValue(connectedRef, (snap) => {
+                  if (snap.val() === true) {
+                      onDisconnect(myStatusRef).update({
+                          isOnline: false,
+                          lastSeen: serverTimestamp()
+                      });
+                      update(myStatusRef, {
+                          isOnline: true,
+                          lastSeen: serverTimestamp()
+                      });
+                  }
+              });
               
               onValue(ref(db, `users/${user.uid}`), (snap) => {
                   if(snap.exists()) {
@@ -1003,11 +994,6 @@
               loginWrapper.style.display = 'none';
               signUpWrapper.style.display = 'none';
               chatScreenWrapper.style.display = 'grid';
-              
-              update(ref(db, `users/${user.uid}`), {
-                  uid: user.uid,
-                  lastSeen: Date.now()
-              }).catch(err => console.log("User tracking updated"));
 
               onValue(ref(db, `users/${user.uid}/themeColor`), (snap) => {
                   if(snap.exists()) {
@@ -1092,6 +1078,7 @@
                           username: username,
                           email: email,
                           photoURL: "",
+                          isOnline: true,
                           lastSeen: Date.now()
                       });
                   });
@@ -1132,6 +1119,7 @@
           
           refreshDynamicUIHeadings();
           loadUsersAndChannelsList();
+          listenToTypingStatus();
       };
 
       navGroupLink.onclick = () => {
@@ -1168,6 +1156,7 @@
           refreshDynamicUIHeadings();
           loadUsersAndChannelsList();
           listenToMessages();
+          listenToTypingStatus();
       };
 
       navAnnounceLink.onclick = () => {
@@ -1209,6 +1198,7 @@
           refreshDynamicUIHeadings();
           loadUsersAndChannelsList();
           listenToAnnouncements();
+          listenToTypingStatus();
       };
 
       navSettingsLink.onclick = () => { document.getElementById('headerProfileBtn').click(); };
@@ -1266,7 +1256,6 @@
                   const rawUsername = u.username || displayedName;
                   const formattedUsername = formatDisplayUsername(rawUsername);
                   
-                  /* SEARCH FILTER CHECK */
                   if (searchQuery && 
                       !displayedName.toLowerCase().includes(searchQuery) && 
                       !formattedUsername.toLowerCase().includes(searchQuery)) {
@@ -1280,12 +1269,22 @@
                   if(u.photoURL) avatarMark = `<img src="${u.photoURL}" alt="U">`;
                   else avatarMark = `<div class="user-alt-avatar" style="background:${getNameColor(displayedName)}; color:white;">${displayedName.charAt(0).toUpperCase()}</div>`;
                   
-                  item.innerHTML = `${avatarMark}<div class="user-info"><h4>${displayedName}</h4><p>${formattedUsername}</p></div>`;
+                  // Online Status dot badge inside user list
+                  const onlineBadge = u.isOnline ? `<div class="online-dot-badge" title="Online"></div>` : '';
+
+                  item.innerHTML = `${avatarMark}<div class="user-info"><h4>${displayedName}</h4><p>${formattedUsername}</p></div>${onlineBadge}`;
                   item.onclick = () => {
                       selectedTargetID = uid;
                       selectedTargetName = displayedName;
                       chatMainTitle.innerText = displayedName.toUpperCase();
-                      chatSubTitle.innerText = "// PRIVACY LINK STATUS CHECKED";
+                      
+                      // Display Last Seen Date and Time if user is Offline
+                      if(u.isOnline) {
+                          chatSubTitle.innerText = "// ONLINE";
+                      } else {
+                          const lastSeenStr = u.lastSeen ? formatTimestamp(u.lastSeen) : "Offline";
+                          chatSubTitle.innerText = `// LAST SEEN: ${lastSeenStr}`;
+                      }
                       
                       updateRightProfileCard(displayedName, formattedUsername, u.photoURL || "");
 
@@ -1293,10 +1292,11 @@
                       checkBlockStatus();
 
                       rightPanelContextTitle.innerText = "PEER_METADATA";
-                      rightPanelDynamicContent.innerHTML = `<div class="details-desc"><p style="margin-bottom:5px;"><strong>Identity Node:</strong> ${displayedName}</p><p style="margin-bottom:5px;"><strong>Handle:</strong> ${formattedUsername}</p><p><strong>Status:</strong> Encrypted Link</p></div>`;
+                      rightPanelDynamicContent.innerHTML = `<div class="details-desc"><p style="margin-bottom:5px;"><strong>Identity Node:</strong> ${displayedName}</p><p style="margin-bottom:5px;"><strong>Handle:</strong> ${formattedUsername}</p><p><strong>Status:</strong> ${u.isOnline ? 'Online' : 'Last Seen ' + (u.lastSeen ? formatTimestamp(u.lastSeen) : 'N/A')}</p></div>`;
                       
                       loadUsersAndChannelsList();
                       listenToMessages();
+                      listenToTypingStatus();
 
                       if(window.innerWidth <= 1024) {
                           document.getElementById('chatTheaterFrame').scrollIntoView({ behavior: 'smooth' });
@@ -1335,6 +1335,7 @@
                       
                       loadUsersAndChannelsList();
                       listenToMessages();
+                      listenToTypingStatus();
 
                       if(window.innerWidth <= 1024) {
                           document.getElementById('chatTheaterFrame').scrollIntoView({ behavior: 'smooth' });
@@ -1389,6 +1390,7 @@
                                   
                                   loadUsersAndChannelsList();
                                   listenToMessages();
+                                  listenToTypingStatus();
 
                                   if(window.innerWidth <= 1024) {
                                       document.getElementById('chatTheaterFrame').scrollIntoView({ behavior: 'smooth' });
@@ -1558,19 +1560,25 @@
           }
       };
 
+      // FORMAT TIMESTAMP WITH BOTH DATE AND TIME
       function formatTimestamp(ts) {
           if (!ts) return "";
           const date = new Date(ts);
+          
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+
           let hours = date.getHours();
           let minutes = date.getMinutes();
           const ampm = hours >= 12 ? 'PM' : 'AM';
           hours = hours % 12;
           hours = hours ? hours : 12; 
           minutes = minutes < 10 ? '0' + minutes : minutes;
-          return `${hours}:${minutes} ${ampm}`;
+
+          return `${year}/${month}/${day} ${hours}:${minutes} ${ampm}`;
       }
 
-      /* DATE HEADER FORMATTER */
       function formatDateHeader(ts) {
           if (!ts) return "";
           const msgDate = new Date(ts);
@@ -1587,6 +1595,7 @@
           }
       }
 
+      /* 4. LISTEN TO MESSAGES + SEEN STATUS UPDATER */
       function listenToMessages() {
           if(!selectedTargetID || currentMode === 'announce') return;
           const path = getActiveDatabaseRefPath();
@@ -1605,7 +1614,11 @@
                       
                       if (!isMe && currentMode === "direct") { senderFinalName = selectedTargetName; }
 
-                      /* DATE HEADER INJECTION */
+                      // MARK AS SEEN ONLY IF OPENED BY RECIPIENT
+                      if(!isMe && msgData.seen === false) {
+                          update(ref(db, `${path}/${key}`), { seen: true });
+                      }
+
                       const currentDateStr = formatDateHeader(msgData.timestamp);
                       if (currentDateStr !== lastRenderedDate) {
                           const dateSeparator = document.createElement('div');
@@ -1643,39 +1656,60 @@
                       const bubble = document.createElement('div');
                       bubble.className = 'bubble';
 
+                      // Render Quoted Reply Box inside bubble if available
+                      if(msgData.replyTo) {
+                          const replyQuote = document.createElement('div');
+                          replyQuote.className = 'quoted-reply-box';
+                          replyQuote.innerHTML = `<div class="quoted-reply-sender">${msgData.replyTo.senderName}</div><div>${msgData.replyTo.msgText}</div>`;
+                          bubble.appendChild(replyQuote);
+                      }
+
                       if (msgData.type === 'image' || msgData.fileType === 'image') {
-                          bubble.innerHTML = `<img src="${msgData.mediaUrl}" class="chat-media-img" onclick="window.open('${msgData.mediaUrl}')" alt="Attachment">`;
+                          bubble.innerHTML += `<img src="${msgData.mediaUrl}" class="chat-media-img" onclick="window.open('${msgData.mediaUrl}')" alt="Attachment">`;
                           if(msgData.message) bubble.innerHTML += `<div>${msgData.message}</div>`;
                       } else if (msgData.type === 'video' || msgData.fileType === 'video') {
-                          bubble.innerHTML = `<video src="${msgData.mediaUrl}" class="chat-media-video" controls></video>`;
+                          bubble.innerHTML += `<video src="${msgData.mediaUrl}" class="chat-media-video" controls></video>`;
                           if(msgData.message) bubble.innerHTML += `<div>${msgData.message}</div>`;
                       } else if (msgData.type === 'audio' || msgData.fileType === 'audio') {
-                          bubble.innerHTML = `<audio src="${msgData.mediaUrl}" controls class="chat-audio-player"></audio>`;
+                          bubble.innerHTML += `<audio src="${msgData.mediaUrl}" controls class="chat-audio-player"></audio>`;
                           if(msgData.message) bubble.innerHTML += `<div style="margin-top:5px;">${msgData.message}</div>`;
                       } else if (msgData.type === 'file' || msgData.fileType === 'file') {
-                          bubble.innerHTML = `<a href="${msgData.mediaUrl}" download="${msgData.fileName || 'file'}" class="chat-media-file"><i class="fa-solid fa-file-arrow-down"></i> <span>${msgData.fileName || 'Download File'}</span></a>`;
+                          bubble.innerHTML += `<a href="${msgData.mediaUrl}" download="${msgData.fileName || 'file'}" class="chat-media-file"><i class="fa-solid fa-file-arrow-down"></i> <span>${msgData.fileName || 'Download File'}</span></a>`;
                           if(msgData.message) bubble.innerHTML += `<div style="margin-top:5px;">${msgData.message}</div>`;
                       } else {
-                          bubble.innerText = msgData.message;
+                          const msgBodyText = document.createElement('span');
+                          msgBodyText.innerText = msgData.message;
+                          bubble.appendChild(msgBodyText);
                       }
 
                       bubbleWrapper.appendChild(bubble);
 
-                      if (isMe) {
-                          const actionsDiv = document.createElement('div');
-                          actionsDiv.className = 'msg-actions-trigger';
-                          actionsDiv.innerHTML = `
-                              ${(msgData.message && msgData.type === 'text') ? `<button class="msg-action-inline-btn" onclick="initiateInlineEdit('${key}', \`${msgData.message.replace(/'/g, "\\'")}\`)"><i class="fa-solid fa-pen"></i></button>` : ''}
-                              <button class="msg-action-inline-btn delete" onclick="initiateInlineDelete('${key}')"><i class="fa-solid fa-trash"></i></button>
-                          `;
-                          bubbleWrapper.appendChild(actionsDiv);
-                      }
+                      // Action triggers (Reply / Edit / Delete)
+                      const actionsDiv = document.createElement('div');
+                      actionsDiv.className = 'msg-actions-trigger';
+                      actionsDiv.innerHTML = `
+                          <button class="msg-action-inline-btn" title="Reply" onclick="initiateInlineReply('${key}', \`${senderFinalName.replace(/'/g, "\\'")}\`, \`${(msgData.message || 'Media Packet').replace(/'/g, "\\'")}\`)"><i class="fa-solid fa-reply"></i></button>
+                          ${isMe && (msgData.message && msgData.type === 'text') ? `<button class="msg-action-inline-btn" onclick="initiateInlineEdit('${key}', \`${msgData.message.replace(/'/g, "\\'")}\`)"><i class="fa-solid fa-pen"></i></button>` : ''}
+                          ${isMe ? `<button class="msg-action-inline-btn delete" onclick="initiateInlineDelete('${key}')"><i class="fa-solid fa-trash"></i></button>` : ''}
+                      `;
+                      bubbleWrapper.appendChild(actionsDiv);
 
                       contentDiv.appendChild(bubbleWrapper);
 
                       const timeStampSpan = document.createElement('span');
                       timeStampSpan.className = 'msg-timestamp';
-                      timeStampSpan.innerText = formatTimestamp(msgData.timestamp);
+                      
+                      // Seen Ticks Logic
+                      let statusTickHTML = '';
+                      if(isMe && currentMode === "direct") {
+                          if(msgData.seen === true) {
+                              statusTickHTML = `<i class="fa-solid fa-check-double status-tick seen" title="Seen"></i>`;
+                          } else {
+                              statusTickHTML = `<i class="fa-solid fa-check status-tick" title="Sent"></i>`;
+                          }
+                      }
+
+                      timeStampSpan.innerHTML = `${formatTimestamp(msgData.timestamp)} ${statusTickHTML}`;
                       contentDiv.appendChild(timeStampSpan);
                       
                       rowDiv.appendChild(profileDiv);
@@ -1707,9 +1741,17 @@
               senderPhoto: myPhotoURL || "",
               message: txt,
               type: 'text',
-              timestamp: Date.now()
+              timestamp: Date.now(),
+              seen: false,
+              replyTo: activeReplyData ? activeReplyData : null
           };
-          push(ref(db, path), pack).then(()=>{ messageInput.value = ""; });
+          
+          push(ref(db, path), pack).then(()=>{ 
+              messageInput.value = "";
+              sendTypingStatus(false);
+              activeReplyData = null;
+              replyPreviewDock.style.display = 'none';
+          });
       }
 
       sendBtn.onclick = handlePacketTransmission;
@@ -1856,7 +1898,14 @@
 
       const stripLogoutBtn = document.getElementById('stripLogoutBtn');
       const logoutBtn = document.getElementById('logoutBtn');
-      const triggerLogoutSequence = () => { if(confirm("Disconnect from network stream?")) signOut(auth); };
+      const triggerLogoutSequence = () => { 
+          if(confirm("Disconnect from network stream?")) {
+              update(ref(db, `users/${currentUserUID}`), {
+                  isOnline: false,
+                  lastSeen: Date.now()
+              }).then(() => signOut(auth));
+          }
+      };
       if(stripLogoutBtn) stripLogoutBtn.onclick = triggerLogoutSequence;
       if(logoutBtn) logoutBtn.onclick = triggerLogoutSequence;
 
