@@ -272,6 +272,7 @@
             .data-hub { width: 100%; max-height: 300px; }
             .chat-theater { width: 100%; height: 75vh; height: 75dvh; border-radius: 20px; }
             .theater-header { padding: 10px 15px; }
+            .mobile-back-btn { display: inline-block; }
             .messages-box { padding: 12px 15px; }
             .input-dock { padding: 10px 12px; }
             .right-sidebar { width: 100%; display: flex !important; border-radius: 20px; margin-bottom: 20px; }
@@ -477,7 +478,7 @@
             
             <div style="font-size: 0.65rem; text-align: left; margin-top: 8px; color: var(--neon-accent); font-weight: bold; text-transform: uppercase;">Username:</div>
             <input type="text" id="profileUsernameInput" placeholder="@username" required>
-            <div id="usernameErrorMsg" class="error-message">Please use lowercase English letters (a-z) or numbers for Username.</div>
+            <div id="usernameErrorMsg" class="error-message">Please use lowercase English letters (a-z), numbers or underscores for Username.</div>
 
             <div style="font-size: 0.7rem; text-align: left; margin-top: 15px; color: rgba(255,255,255,0.5); font-weight: bold;">SELECT NEON ACCENT HUE:</div>
             <div class="color-picker-grid">
@@ -522,7 +523,7 @@
       const db = getDatabase(app);
       const auth = getAuth(app); 
 
-      const ADMIN_USERNAME = "admin";
+      const ADMIN_USERNAME = "dasithdamsara";
 
       let currentMode = "direct"; 
       let selectedTargetID = ""; 
@@ -577,8 +578,8 @@
       const signUpUsernameElem = document.getElementById('signUpUsername');
       const profileUsernameInputElem = document.getElementById('profileUsernameInput');
       
-      handleUsernameInputFormat(signUpUsernameElem);
-      handleUsernameInputFormat(profileUsernameInputElem);
+      if(signUpUsernameElem) handleUsernameInputFormat(signUpUsernameElem);
+      if(profileUsernameInputElem) handleUsernameInputFormat(profileUsernameInputElem);
 
       function getNameColor(name) {
           if(!name) return '#3b82f6';
@@ -646,6 +647,13 @@
       const replyingToText = document.getElementById('replyingToText');
       const cancelReplyBtn = document.getElementById('cancelReplyBtn');
       const typingIndicator = document.getElementById('typingIndicator');
+      const mobileBackToListBtn = document.getElementById('mobileBackToListBtn');
+
+      if(mobileBackToListBtn) {
+          mobileBackToListBtn.onclick = () => {
+              document.querySelector('.data-hub').scrollIntoView({ behavior: 'smooth' });
+          };
+      }
 
       fileInputTrigger.onclick = () => chatFileInput.click();
 
@@ -1423,7 +1431,7 @@
               title: title,
               body: body,
               timestamp: Date.now(),
-              author: myName || "Admin"
+              author: "Admin"
           }).then(() => {
               announceTitleInput.value = "";
               announceBodyInput.value = "";
@@ -1560,15 +1568,10 @@
           }
       };
 
-      // FORMAT TIMESTAMP WITH BOTH DATE AND TIME
-      function formatTimestamp(ts) {
+      // FORMAT TIME ONLY (FOR MESSAGES)
+      function formatTimeOnly(ts) {
           if (!ts) return "";
           const date = new Date(ts);
-          
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const day = String(date.getDate()).padStart(2, '0');
-
           let hours = date.getHours();
           let minutes = date.getMinutes();
           const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -1576,7 +1579,50 @@
           hours = hours ? hours : 12; 
           minutes = minutes < 10 ? '0' + minutes : minutes;
 
-          return `${year}/${month}/${day} ${hours}:${minutes} ${ampm}`;
+          return `${hours}:${minutes} ${ampm}`;
+      }
+
+      // FORMAT TIMESTAMP FOR LAST SEEN & RELATIVE TIME LOGIC
+      function formatTimestamp(ts) {
+          if (!ts) return "";
+          const date = new Date(ts);
+          const now = new Date();
+
+          let hours = date.getHours();
+          let minutes = date.getMinutes();
+          const ampm = hours >= 12 ? 'PM' : 'AM';
+          hours = hours % 12;
+          hours = hours ? hours : 12;
+          minutes = minutes < 10 ? '0' + minutes : minutes;
+          const timeStr = `${hours}:${minutes} ${ampm}`;
+
+          const diffTime = Math.abs(now - date);
+          const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+          const isToday = now.toDateString() === date.toDateString();
+          
+          const yesterday = new Date(now);
+          yesterday.setDate(now.getDate() - 1);
+          const isYesterday = yesterday.toDateString() === date.toDateString();
+
+          if (isToday) {
+              return `today at ${timeStr}`;
+          } else if (isYesterday) {
+              return `yesterday at ${timeStr}`;
+          } else if (diffDays < 30) {
+              return `${diffDays} days ago`;
+          } else if (diffDays >= 30 && diffDays < 365) {
+              const months = Math.floor(diffDays / 30);
+              return months === 1 ? `a month ago` : `${months} months ago`;
+          } else if (diffDays >= 365) {
+              const years = Math.floor(diffDays / 365);
+              return years === 1 ? `a year ago` : `${years} years ago`;
+          } else {
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, '0');
+              const day = String(date.getDate()).padStart(2, '0');
+              return `${year}/${month}/${day} ${timeStr}`;
+          }
       }
 
       function formatDateHeader(ts) {
@@ -1614,7 +1660,6 @@
                       
                       if (!isMe && currentMode === "direct") { senderFinalName = selectedTargetName; }
 
-                      // MARK AS SEEN ONLY IF OPENED BY RECIPIENT
                       if(!isMe && msgData.seen === false) {
                           update(ref(db, `${path}/${key}`), { seen: true });
                       }
@@ -1656,7 +1701,6 @@
                       const bubble = document.createElement('div');
                       bubble.className = 'bubble';
 
-                      // Render Quoted Reply Box inside bubble if available
                       if(msgData.replyTo) {
                           const replyQuote = document.createElement('div');
                           replyQuote.className = 'quoted-reply-box';
@@ -1684,7 +1728,6 @@
 
                       bubbleWrapper.appendChild(bubble);
 
-                      // Action triggers (Reply / Edit / Delete)
                       const actionsDiv = document.createElement('div');
                       actionsDiv.className = 'msg-actions-trigger';
                       actionsDiv.innerHTML = `
@@ -1699,7 +1742,6 @@
                       const timeStampSpan = document.createElement('span');
                       timeStampSpan.className = 'msg-timestamp';
                       
-                      // Seen Ticks Logic
                       let statusTickHTML = '';
                       if(isMe && currentMode === "direct") {
                           if(msgData.seen === true) {
@@ -1709,7 +1751,7 @@
                           }
                       }
 
-                      timeStampSpan.innerHTML = `${formatTimestamp(msgData.timestamp)} ${statusTickHTML}`;
+                      timeStampSpan.innerHTML = `${formatTimeOnly(msgData.timestamp)} ${statusTickHTML}`;
                       contentDiv.appendChild(timeStampSpan);
                       
                       rowDiv.appendChild(profileDiv);
